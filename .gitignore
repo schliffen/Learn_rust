@@ -13,7 +13,7 @@
 #
 # already existing elements were commented out
 
-*/target/*
+test01/target/*
 
 #
-*/.vscode/*
+test01/.vscode/*
