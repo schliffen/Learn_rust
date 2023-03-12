@@ -96,10 +96,10 @@ fn main() -> Result<(), Box<dyn Error>>  {
     
     let v1 = [0;13];
 
-    let agentInfo = ScheduleState{
+    let mut agentInfo = ScheduleState{
         schedule:[0;13],
         count : HashMap::new()
-    }
+    };
 
 
     agentInfo.count.insert(0, v1);
