@@ -16,4 +16,4 @@
 */target/*
 
 #
-*.vscode
+*/.vscode/*
