@@ -4,8 +4,14 @@ mod hill_climbing;
 mod tabu;
 use hill_climbing::{Task, hill_climbing_algo, evaluate_schedule};
 use tabu::{tabu_search};
+use std::borrow::Borrow;
 use std::error::Error;
 use std::collections::{HashSet, HashMap};
+
+use std::cell::RefCell;
+use std::fmt::Pointer;
+use std::rc::Rc;
+use std::ops::Deref;
 
 struct tst1{
     width: u16,
@@ -56,73 +62,72 @@ impl<'a> Shape<'a> for Rectangle {
 
 
 #[derive(Clone)]
+/*
 pub struct ScheduleState{
-    pub schedule : [usize; 13],
-    pub count: HashMap<usize, [usize;13]>
+   pub schedule : [usize; 13],
+   pub count: HashMap<usize, [usize;13]>
+}
+*/
+pub struct ScheduleState{
+    pub schedule : Rc<RefCell<[usize; 13]>>,
+    pub count: Rc<RefCell<HashMap<usize, [usize;13]>>>
 }
 
 
 
-fn main() -> Result<(), Box<dyn Error>>  {
-/* 
-    let tasks = vec![
-        Task::new(2,7),
-        Task::new(2, 8),
-        Task::new(4,9),
-        Task::new(5,10),
-        Task::new(7,11),
-        Task::new(5, 18),
-        Task::new(6,15),
-        Task::new(8,17),
-        Task::new(7, 13),
-    ];
-    // hill climbing 
-    println!(" start ---------------------- ");
-    //let best_schedule = hill_climbing_algo( &tasks );
-    let best_schedule = tabu_search( &tasks.to_vec() , 100, 10);    
-    println!(" end ---------------------- ");
-    let missed_dd =  evaluate_schedule(&best_schedule);
-    println!(" final best missed: {} ", missed_dd );
-    for item in best_schedule{
-        println!("process time: {}, deadline: {} ", item.processing_time, item.deadline );
-    }
 
+
+fn main() -> Result<(), Box<dyn Error>>  {
+
+
+    
+    let agentInfo = Rc::new(ScheduleState{
+        schedule:Rc::new(RefCell::new([0;13])),
+        count : Rc::new(RefCell::new(HashMap::new()))
+    });
+    let ref1 = Rc::clone(&agentInfo.schedule);
+    let ref2 = Rc::clone(&agentInfo.count);
+
+    ref1.borrow_mut()[0] = 2;
+    ref2.borrow_mut().insert(0, *ref1.borrow_mut());
+    println!("{:?}", agentInfo.schedule.borrow_mut()); // prints [(1, 2)]
+    println!("{:?}", agentInfo.count.borrow_mut()); // prints {3: 4}
+    
+
+
+ /* 
+    let mystruct = ScheduleState {
+        schedule: [0; 13],
+        count: HashMap::new(),
+    };
 */
 
+    // let mystruct_rc = Rc::new(RefCell::new(mystruct));
+    //let y_rc = Rc::new(RefCell::new( mystruct_rc.borrow_mut().count.borrow() ));
+
+    // Modify the count field of mystruct
+    // mystruct_rc.borrow_mut().count.insert(0, [1; 13]);
+
+    // println!("{:?}", mystruct_rc.borrow_mut().count);
+
+    //y_rc.borrow_mut().insert(1, [1;13]);
 
 
+    //println!("{:?}", mystruct_rc.clone().schedule);
+    //println!("{:?}", x_rc);
     
-    let mut mystate : HashMap<usize, ScheduleState> = HashMap::new();        
     
-    let v1 = [0;13];
-
-    let mut agentInfo = ScheduleState{
-        schedule:[0;13],
-        count : HashMap::new()
-    };
-
-
-    agentInfo.count.insert(0, v1);
-
-    mystate.insert(1, agentInfo);
-
-
-
-
-
-
-
-
-
-
-
-
 
     println!("Finished!");
     
 
-
-
+/* 
+    let mystruct_rc = Rc::new(RefCell::new(mystruct));
+    let x1 = Rc::clone(&mystruct_rc);
+    let x2 = Rc::clone(&mystruct_rc);
+    x1.borrow_mut().schedule[0] = 3;
+    x2.borrow_mut().count.insert(0, x1.borrow_mut().schedule);
+*/
 
 
     Ok(())
