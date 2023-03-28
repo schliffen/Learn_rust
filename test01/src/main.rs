@@ -1,20 +1,20 @@
 mod hill_climbing;
 mod tabu;
-use hill_climbing::{evaluate_schedule, hill_climbing_algo, Task};
-use std::borrow::Borrow;
-use std::collections::{HashMap, HashSet};
+
+
+use std::collections::{HashMap};
 use std::error::Error;
-use tabu::tabu_search;
+
 
 use std::cell::RefCell;
-use std::fmt::Pointer;
-use std::ops::Deref;
+
+
 use std::rc::Rc;
 
-use rand::rngs::StdRng;
-use rand::{Rng, SeedableRng};
 
-use std::mem;
+
+
+
 
 use std::ops::Add;
 
@@ -87,13 +87,13 @@ type CallbackFn = fn(&Vec<i32>) -> Vec<i32>;
 // Function that takes a callback function as an argument and returns a vector of i32s
 fn process_numbers(numbers: &Vec<i32>, callback: CallbackFn) -> Vec<i32> {
     // Double all the numbers in the input vector
-    let mut doubled_numbers = numbers.iter().map(|x| x * 2).collect();
+    let doubled_numbers = numbers.iter().map(|x| x * 2).collect();
 
     // Call the callback function to modify the doubled numbers
-    let modified_numbers = callback(&doubled_numbers);
+    
 
     // Return the modified numbers
-    modified_numbers
+    callback(&doubled_numbers)
 }
 
 // Define a callback function that squares all the numbers in the input vector
@@ -156,7 +156,7 @@ pub fn  add_two_numbers(
         }    
 
         let r = total % 10;
-        total = total / 10; 
+        total /= 10; 
         current.next = Some(Box::new(Node::new(r)));
         current = current.next.as_mut().unwrap();
     }    

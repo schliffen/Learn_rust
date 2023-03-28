@@ -29,7 +29,7 @@ pub fn hill_climbing_algo(tasks: &[Task<i32, i32>] )-> Vec<Task<i32, i32>>{
     let mut schedule = tasks.to_vec();
     schedule.shuffle(&mut rng);
 
-    let mut best_schedule = schedule.clone();
+    let _best_schedule = schedule.clone();
     let mut best_missed_deadlines = evaluate_schedule(&schedule); 
 
     let mut found_better = true;
@@ -67,7 +67,7 @@ pub fn hill_climbing_algo(tasks: &[Task<i32, i32>] )-> Vec<Task<i32, i32>>{
 
 
 
-    return schedule;
+    schedule
 }
 
 

@@ -6,7 +6,7 @@ use crate::hill_climbing::{Task, evaluate_schedule};
 
 
 
-pub fn tabu_search( tasks: &[Task<i32, i32>], max_iterations: usize, tabu_list_length: usize) -> Vec<Task<i32, i32>> {
+pub fn tabu_search( tasks: &[Task<i32, i32>], _max_iterations: usize, tabu_list_length: usize) -> Vec<Task<i32, i32>> {
 
     let mut rng = rand::thread_rng();
     let mut schedule = tasks.to_vec();
@@ -65,7 +65,7 @@ pub fn tabu_search( tasks: &[Task<i32, i32>], max_iterations: usize, tabu_list_l
 
 
 
-    return schedule; 
+    schedule 
 
 }
 
