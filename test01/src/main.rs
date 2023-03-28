@@ -16,6 +16,11 @@ use rand::{Rng, SeedableRng};
 
 use std::mem;
 
+use std::ops::Add;
+
+fn add<T: Add<Output = T>>(a: T, b: T) -> T {
+    a + b
+}
 
 struct tst1 {
     width: u16,
@@ -95,43 +100,108 @@ fn process_numbers(numbers: &Vec<i32>, callback: CallbackFn) -> Vec<i32> {
 fn square_numbers(numbers: &Vec<i32>) -> Vec<i32> {
     numbers.iter().map(|x| x * x).collect()
 }
+pub struct  Node<T> {
+    data: T,
+    next: Option<Box<Node<T>>>,
+}
+
+impl <T> Node<T>{
+    fn new(data: T) -> Self {
+        Node {
+            data,
+            next: None,
+        }
+    }
+
+    fn append(&mut self, data: T) {
+        let mut current = self;
+        while let Some(ref mut next) = current.next {
+            current = next;
+        }
+        current.next = Some(Box::new(Node::new(data)));
+    }
+}
+
+
+pub fn  add_two_numbers(
+    l1: Option<Box<Node<i32>>>,
+    l2: Option<Box<Node<i32>>>,
+) -> Option<Box<Node<i32>>> {
+    
+    let mut front = Box::new(Node::new(0));
+    let mut current = &mut front;
+
+    let mut num1 = &l1;
+    let mut num2 = &l2;
+
+    let mut total = 0;
+    loop {
+        match (num1, num2) {
+            (Some(n1), Some(n2)) => {
+                total += n1.data + n2.data ;
+                num1 = &n1.next;
+                num2 = &n2.next;
+            }    
+            (Some(n1), None) => {
+                total += n1.data;
+                num1 = &n1.next;
+            }    
+            (None, Some(n2)) => {
+                total = n2.data;
+                num2 = &n2.next;
+            }    
+            (None, None) => {
+                break;
+            }    
+        }    
+
+        let r = total % 10;
+        total = total / 10; 
+        current.next = Some(Box::new(Node::new(r)));
+        current = current.next.as_mut().unwrap();
+    }    
+
+    if total > 0 {
+        current.next = Some(Box::new(Node::new(total)));
+    }    
+
+    front.next
+}    
 
 fn main() -> Result<(), Box<dyn Error>> {
 
     // creating linked list using box 
-    struct  Node<T> {
-        data: T,
-        next: Option<Box<Node<T>>>,
-    };
-    impl <T> Node<T>{
-        fn new(data: T) -> Self {
-            Node {
-                data,
-                next: None,
-            }
-        }
+    let mut l1 = Node::new(1);
+    l1.append(9);
+    l1.append(8);
+    l1.append(7);
+    l1.append(0);
 
-        fn append(&mut self, data: T) {
-            let mut current = self;
-            while let Some(ref mut next) = current.next {
-                current = next;
-            }
-            current.next = Some(Box::new(Node::new(data)));
-        }
+    let mut l2 = Node::new(1);
+    l2.append(7);
+    l2.append(5);
+    l2.append(6);
+    //
+    let mut result = add_two_numbers(Some(Box::new(l1)), Some(Box::new(l2))).unwrap();
+
+    //println!("result data: {:?}", result.unwrap().data);
+
+    let iterate = true;
+    while  iterate {
+        println!("{}", result.as_ref().data );
+        result = result.next.unwrap();
     }
 
-    let mut list = Node::new(1);
-    list.append(2);
-    list.append(3);
-    list.append(4);
-    list.append(0);
+
+
 
     // assume this lined list is given 
 
+    /*
     // retuen data
     let mut return_list = Node::new(0);
-    let mut current = &list;
-    while let Some(ref next) = current.next {
+    let iterate = true;
+    while  iterate {
         println!("{}", current.data);
         let mut newdata = Node::new(current.data);
 //        if  return_list.next.is_some() {
@@ -162,16 +232,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
     
     println!("{}", ncurrent.data);
-
-
-
-
-
-
-
-
-
-
+    */
 
 
 
